@@ -1,5 +1,6 @@
 import React from 'react'
-import {StyleSheet, Text, View, Button} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
+import CustomButton from '../Button'
 import {usePermissions} from './context'
 
 export default function SettingsScreen() {
@@ -9,7 +10,7 @@ export default function SettingsScreen() {
     <View style={styles.container}>
       <Text style={{color: 'black', fontSize: 30}}>SettingsScreen</Text>
       <Text>{JSON.stringify(permissions)}</Text>
-      <Button title="Permission" onPress={askLocationPermission} />
+      <CustomButton title="Permissions" onPress={askLocationPermission} />
     </View>
   )
 }

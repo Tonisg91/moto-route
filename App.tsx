@@ -1,10 +1,10 @@
 import React from 'react'
+import {StyleSheet, LogBox} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs'
 import {NavigationContainer} from '@react-navigation/native'
 import HomeScreen from './src/components/Map'
 import SettingsScreen from './src/components/Settings'
-import {StyleSheet} from 'react-native'
 import {
   PermissionProvider,
   usePermissions,
@@ -14,13 +14,12 @@ import {FullPageLoading} from './src/components/Loading'
 const Tab = createMaterialBottomTabNavigator()
 
 export default function App() {
+  LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."])
+
   return (
     <NavigationContainer>
       <AppState>
-        <CustomNavigator>
-          <Tab.Screen name="Map" component={HomeScreen} />
-          <Tab.Screen name="Settings" component={SettingsScreen} />
-        </CustomNavigator>
+        <BottomTabNavigator />
       </AppState>
     </NavigationContainer>
   )
@@ -30,7 +29,7 @@ function AppState({children}: {children: React.ReactNode}) {
   return <PermissionProvider>{children}</PermissionProvider>
 }
 
-function CustomNavigator({children}: {children: React.ReactNode}) {
+function BottomTabNavigator() {
   const {permissions} = usePermissions()
 
   if (permissions.locationStatus === 'unavailable') {
@@ -56,7 +55,8 @@ function CustomNavigator({children}: {children: React.ReactNode}) {
           return <Ionicons name={iconName} size={20} color={color} />
         },
       })}>
-      {children}
+      <Tab.Screen name="Map" component={HomeScreen} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   )
 }

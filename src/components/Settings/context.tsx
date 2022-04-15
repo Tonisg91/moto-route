@@ -2,6 +2,7 @@ import React, {createContext, useContext, useEffect, useState} from 'react'
 import {AppState, Platform} from 'react-native'
 import {
   check,
+  openSettings,
   PERMISSIONS,
   PermissionStatus,
   request,
@@ -30,7 +31,7 @@ export const usePermissions = () => useContext(PermissionContext)
 // Provider
 export function PermissionProvider({children}: {children: React.ReactNode}) {
   const [permissions, setPermissions] = useState(permissionInitState)
-  console.log({permissions})
+
   useEffect(() => {
     AppState.addEventListener('change', state => {
       if (state !== 'active') return
@@ -49,7 +50,7 @@ export function PermissionProvider({children}: {children: React.ReactNode}) {
     }
 
     if (permissionStatus === 'blocked') {
-      console.warn('Please enable location services for this app')
+      openSettings()
     }
 
     setPermissions({
