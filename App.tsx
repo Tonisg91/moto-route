@@ -13,9 +13,10 @@ import {FullPageLoading} from './src/components/Loading'
 
 const Tab = createMaterialBottomTabNavigator()
 
-export default function App() {
-  LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."])
+// React native maps deprecation depencencies
+LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."])
 
+export default function App() {
   return (
     <NavigationContainer>
       <AppState>
@@ -64,8 +65,6 @@ function BottomTabNavigator() {
 const styles = StyleSheet.create({
   barStyle: {
     backgroundColor: 'transparent',
-    elevation: 0,
-    position: 'absolute',
     color: 'tomato',
   },
 })

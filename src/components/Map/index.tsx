@@ -1,19 +1,11 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import MapView from 'react-native-maps'
+import Map from './Map'
 
 export default function HomeScreen() {
   return (
-    <View style={{flex: 1}}>
-      <MapView
-        style={{flex: 1}}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      />
+    <View style={styles.container}>
+      <Map />
     </View>
   )
 }
@@ -21,8 +13,5 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 })
