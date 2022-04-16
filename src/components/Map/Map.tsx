@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react'
 import {StyleSheet, View} from 'react-native'
-import MapView from 'react-native-maps'
+import MapView, {Polyline} from 'react-native-maps'
 import {Text} from 'react-native-paper'
 
 import {FloatButton} from '../Buttons'
@@ -16,7 +16,7 @@ export default function Map() {
     getCurrentLocation,
     followUser,
     currentLocation,
-    stopFollowing,
+    routeLines,
   } = useLocation()
 
   useEffect(() => {
@@ -69,8 +69,13 @@ export default function Map() {
           longitude: initialLocation!.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
-        }}
-      />
+        }}>
+        <Polyline
+          coordinates={routeLines}
+          strokeColor="green"
+          strokeWidth={5}
+        />
+      </MapView>
       <FloatButton
         iconName="locate-outline"
         onPress={centerPosition}
