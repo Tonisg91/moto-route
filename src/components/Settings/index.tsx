@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
-import CustomButton from '../Button'
+import {CustomButton} from '../Buttons'
 import {usePermissions} from './context'
 
 export default function SettingsScreen() {
