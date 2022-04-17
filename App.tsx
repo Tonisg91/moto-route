@@ -39,6 +39,7 @@ export default function App() {
 
 function BottomTabNavigator() {
   const auth = useAuth()
+
   const {permissions} = usePermissions()
 
   if (auth.loading || permissions.locationStatus === 'unavailable') {

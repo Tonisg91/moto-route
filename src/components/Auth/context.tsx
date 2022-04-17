@@ -1,16 +1,9 @@
 import React, {createContext, useContext, useEffect, useState} from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+// import AsyncStorage from '@react-native-async-storage/async-storage'
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
 // import {AppState, Platform} from 'react-native'
-
-export interface User {
-  id: string
-  name: string
-  email: string
-  avatar: string
-}
-
 export interface Auth {
-  user: User | null
+  user: FirebaseAuthTypes.User | null
   loading: boolean
 }
 
@@ -21,10 +14,10 @@ export const authInitState: Auth = {
 
 // Context
 type AuthContextProps = {
-  user: User | null
+  user: FirebaseAuthTypes.User | null
   loading: boolean
-  login: () => void
-  logout: () => void
+  signIn: (user: FirebaseAuthTypes.User) => void
+  signOut: () => void
 }
 
 export const AuthContext = createContext({} as AuthContextProps)
@@ -35,7 +28,7 @@ export const useAuth = () => useContext(AuthContext)
 // Provider
 export function AuthProvider({children}: {children: React.ReactNode}) {
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null)
 
   useEffect(() => {
     loadUser()
@@ -44,24 +37,27 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
 
   const loadUser = async () => {
     try {
-      const userData = await AsyncStorage.getItem('@user')
-      setUser(JSON.parse(userData || 'null'))
+      const userData = auth().currentUser
+      // const userData = await AsyncStorage.getItem('@user')
+
+      setUser(userData)
       setLoading(false)
     } catch (error) {
       console.error(error)
     }
   }
 
-  const login = async () => {
-    console.log('login')
+  const signIn = async (userData: FirebaseAuthTypes.User) => {
+    setUser(userData)
   }
 
-  const logout = async () => {
-    console.log('logout')
+  const signOut = async () => {
+    auth().signOut()
+    setUser(null)
   }
 
   return (
-    <AuthContext.Provider value={{user, login, logout, loading}}>
+    <AuthContext.Provider value={{user, signIn, signOut, loading}}>
       {children}
     </AuthContext.Provider>
   )
