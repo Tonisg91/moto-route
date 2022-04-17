@@ -2,10 +2,10 @@ import React from 'react'
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
 import {GoogleSignin} from '@react-native-google-signin/google-signin'
 import {LoginButton} from '../Buttons'
+import {GOOGLE_SIGNIN_CLIENT_ID} from '@env'
 
 GoogleSignin.configure({
-  webClientId:
-    '491933642026-opje85vktm998n6kk3hefetogq9o2792.apps.googleusercontent.com',
+  webClientId: GOOGLE_SIGNIN_CLIENT_ID,
 })
 
 interface Props {

@@ -1,15 +1,16 @@
 import React from 'react'
+import {Alert} from 'react-native'
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
 import {LoginManager, AccessToken, Settings} from 'react-native-fbsdk-next'
 
+import {FB_APP_ID} from '@env'
 import {LoginButton} from '../Buttons'
-import {Alert} from 'react-native'
 
 interface Props {
   authCB: (user: FirebaseAuthTypes.User) => void
 }
 
-Settings.setAppID('1407723659699590')
+Settings.setAppID(FB_APP_ID)
 
 export default function FBSignIn({authCB}: Props) {
   const signIn = async () => {
