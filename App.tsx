@@ -10,11 +10,21 @@ import {
   usePermissions,
 } from './src/components/Settings/context'
 import {FullPageLoading} from './src/components/Loading'
+import {AuthProvider, useAuth} from './src/components/Auth/context'
+import Auth from './src/components/Auth'
 
 const Tab = createMaterialBottomTabNavigator()
 
 // React native maps deprecation depencencies
 LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."])
+
+function AppState({children}: {children: React.ReactNode}) {
+  return (
+    <AuthProvider>
+      <PermissionProvider>{children}</PermissionProvider>
+    </AuthProvider>
+  )
+}
 
 export default function App() {
   return (
@@ -26,15 +36,16 @@ export default function App() {
   )
 }
 
-function AppState({children}: {children: React.ReactNode}) {
-  return <PermissionProvider>{children}</PermissionProvider>
-}
-
 function BottomTabNavigator() {
+  const auth = useAuth()
   const {permissions} = usePermissions()
 
-  if (permissions.locationStatus === 'unavailable') {
+  if (auth.loading || permissions.locationStatus === 'unavailable') {
     return <FullPageLoading />
+  }
+
+  if (!auth.user) {
+    return <Auth />
   }
 
   return (
