@@ -1,8 +1,9 @@
 import React from 'react'
 import {StyleSheet, LogBox} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs'
 import {NavigationContainer} from '@react-navigation/native'
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs'
+
 import HomeScreen from './src/components/Map'
 import SettingsScreen from './src/components/Settings'
 import {
