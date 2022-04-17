@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services'
 
 
 project.ext.vectoricons = [
@@ -9,6 +10,9 @@ project.ext.vectoricons = [
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 import com.android.build.OutputFile
+// import com.facebook.FacebookSdk;
+// import com.facebook.appevents.AppEventsLogger;
+
 
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
@@ -263,8 +267,19 @@ dependencies {
        exclude group: 'com.google.android.gms', module: 'play-services-base'
        exclude group: 'com.google.android.gms', module: 'play-services-maps'
    }
+
+    // fbsdk
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+
+   // firebase
+    implementation platform('com.google.firebase:firebase-bom:29.3.1')
+    implementation 'com.google.firebase:firebase-analytics'
    implementation 'com.google.android.gms:play-services-base:17.2.1'
    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+   // google signin
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
@@ -323,3 +338,5 @@ def isNewArchitectureEnabled() {
     // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
     return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
 }
+
+apply plugin: 'com.google.gms.google-services'
