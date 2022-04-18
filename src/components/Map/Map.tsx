@@ -16,7 +16,9 @@ export default function Map() {
     getCurrentLocation,
     followUser,
     currentLocation,
+    route,
     routeLines,
+    startRecording,
   } = useLocation()
 
   useEffect(() => {
@@ -67,19 +69,26 @@ export default function Map() {
         initialRegion={{
           latitude: initialLocation!.latitude,
           longitude: initialLocation!.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.00922, // ~0.01km
+          longitudeDelta: 0.00421, // ~0.005km
         }}>
-        <Polyline
-          coordinates={routeLines}
-          strokeColor="green"
-          strokeWidth={5}
-        />
+        {route.current && (
+          <Polyline
+            strokeColor="green"
+            strokeWidth={3}
+            coordinates={routeLines}
+          />
+        )}
       </MapView>
       <FloatButton
         iconName="locate-outline"
         onPress={centerPosition}
         style={styles.centerPositionButton}
+      />
+      <FloatButton
+        iconName={route.current ? 'pause-circle-outline' : 'videocam-outline'}
+        onPress={startRecording}
+        style={styles.recordButton}
       />
       <View style={styles.speedInfo}>
         <Text style={styles.speedText}>
@@ -100,8 +109,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   centerPositionButton: {position: 'absolute', bottom: 20, right: 20},
+  recordButton: {position: 'absolute', bottom: 80, right: 20},
   speedInfo: {
-    backgroundColor: 'black',
+    backgroundColor: '#fff',
     position: 'absolute',
     bottom: 20,
     left: 20,

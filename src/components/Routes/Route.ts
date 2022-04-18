@@ -2,15 +2,16 @@ import firestore, {
   firebase,
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore'
+import {GeoCoordinates} from 'react-native-geolocation-service'
 
 const routeCollection = firestore().collection('routes')
 
-const RECORDING = 'RECORDING'
-const PAUSED = 'PAUSED'
-const STOPPED = 'STOPPED'
+export const RECORDING = 'RECORDING'
+export const PAUSED = 'PAUSED'
+export const STOPPED = 'STOPPED'
 export interface RoutePath {
   coordinates: FirebaseFirestoreTypes.GeoPoint
-  speed: number
+  speed: number | null
   timestamp: number
 }
 
@@ -24,7 +25,7 @@ export interface RouteProps {
 export default class Route {
   path: RoutePath[]
   user: string
-  private status: 'RECORDING' | 'PAUSED' | 'STOPPED'
+  status: 'RECORDING' | 'PAUSED' | 'STOPPED'
 
   constructor(userId: string) {
     this.user = userId
@@ -36,22 +37,35 @@ export default class Route {
     this.status = status
   }
 
-  addPoint(point: RoutePath) {
-    if (this.status !== RECORDING) return
-    this.path.push(point)
+  addPoint(point: GeoCoordinates) {
+    if (!point || this.status !== RECORDING) return
+
+    const parsedPoint: RoutePath = {
+      coordinates: new firebase.firestore.GeoPoint(
+        point.latitude,
+        point.longitude
+      ),
+      speed: point.speed,
+      timestamp: Date.now(),
+    }
+
+    this.path.push(parsedPoint)
   }
 
   startRoute(initialPoint: RoutePath) {
     this.changeStatus(RECORDING)
+    console.log(RECORDING)
     if (this.path.length === 0) this.path.push(initialPoint)
   }
 
   endRoute() {
     this.changeStatus(STOPPED)
+    console.log(STOPPED)
   }
 
   pauseRoute() {
     this.changeStatus(PAUSED)
+    console.log(PAUSED)
   }
 
   saveRoute() {

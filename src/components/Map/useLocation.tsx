@@ -1,14 +1,19 @@
 import {useEffect, useRef, useState} from 'react'
 import Geolocation, {GeoCoordinates} from 'react-native-geolocation-service'
+import {useAuth} from '../Auth/context'
+import Route, {RECORDING} from '../Routes/Route'
 import {usePermissions} from '../Settings/context'
 
 export default function useLocation() {
+  const {user} = useAuth()
   const {permissions} = usePermissions()
+  // TODO: Cambiar routelines
   const [routeLines, setRouteLines] = useState<GeoCoordinates[]>([])
   const [hasLocation, setHasLocation] = useState(false)
   const [currentLocation, setCurrentLocation] = useState<GeoCoordinates>()
   const [initialLocation, setInitialLocation] = useState<GeoCoordinates>()
 
+  const route = useRef<Route>()
   const watchId = useRef<number>()
   const isMounted = useRef(true)
 
@@ -28,7 +33,6 @@ export default function useLocation() {
         if (!isMounted.current) return
         setInitialLocation(location)
         setCurrentLocation(location)
-        setRouteLines(routes => [...routes, location])
         setHasLocation(true)
       })
       .catch(error => console.error(error))
@@ -47,8 +51,12 @@ export default function useLocation() {
   const followUser = () => {
     watchId.current = Geolocation.watchPosition(
       location => {
-        if (!isMounted.current) return
+        // if (!isMounted.current) return
         setCurrentLocation(location.coords)
+
+        if (route.current && route.current.status === RECORDING) {
+          route.current.addPoint(location.coords)
+        }
         setRouteLines(routes => [...routes, location.coords])
       },
       error => console.log(error),
@@ -56,10 +64,20 @@ export default function useLocation() {
     )
   }
 
+  const startRecording = () => {
+    if (!user?.uid) return
+    route.current = new Route(user.uid)
+    console.log(route.current)
+    followUser()
+  }
+
   const stopFollowing = () => {
     if (watchId.current) {
       Geolocation.clearWatch(watchId.current)
     }
+
+    // pause route
+    route.current?.pauseRoute()
   }
 
   return {
@@ -69,6 +87,8 @@ export default function useLocation() {
     getCurrentLocation,
     followUser,
     stopFollowing,
+    route,
     routeLines,
+    startRecording,
   }
 }
