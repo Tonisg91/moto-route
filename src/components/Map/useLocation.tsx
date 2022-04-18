@@ -1,7 +1,9 @@
 import {useEffect, useRef, useState} from 'react'
 import Geolocation, {GeoCoordinates} from 'react-native-geolocation-service'
+import {usePermissions} from '../Settings/context'
 
 export default function useLocation() {
+  const {permissions} = usePermissions()
   const [routeLines, setRouteLines] = useState<GeoCoordinates[]>([])
   const [hasLocation, setHasLocation] = useState(false)
   const [currentLocation, setCurrentLocation] = useState<GeoCoordinates>()
@@ -19,6 +21,8 @@ export default function useLocation() {
   })
 
   useEffect(() => {
+    if (permissions.locationStatus !== 'granted') return
+
     getCurrentLocation()
       .then(location => {
         if (!isMounted.current) return
@@ -28,7 +32,7 @@ export default function useLocation() {
         setHasLocation(true)
       })
       .catch(error => console.error(error))
-  }, [])
+  }, [permissions.locationStatus])
 
   const getCurrentLocation = (): Promise<GeoCoordinates> => {
     return new Promise((resolve, reject) => {
@@ -48,7 +52,7 @@ export default function useLocation() {
         setRouteLines(routes => [...routes, location.coords])
       },
       error => console.log(error),
-      {enableHighAccuracy: true, distanceFilter: 2}
+      {enableHighAccuracy: true, distanceFilter: 2, interval: 1000}
     )
   }
 

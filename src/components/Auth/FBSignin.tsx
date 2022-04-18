@@ -34,7 +34,6 @@ export default function FBSignIn({authCB}: Props) {
         userData.accessToken
       )
 
-      // console.log({response, userData, facebookCredential})
       // Sign-in the user with the credential
       const sessionInfo = await auth().signInWithCredential(facebookCredential)
       authCB(sessionInfo.user)

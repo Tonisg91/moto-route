@@ -69,8 +69,8 @@ export function PermissionProvider({children}: {children: React.ReactNode}) {
       permissionStatus = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
     }
 
-    if (permissionStatus === 'blocked') {
-      console.warn('Please enable location services for this app')
+    if (permissionStatus !== 'granted') {
+      askLocationPermission()
     }
 
     setPermissions({
