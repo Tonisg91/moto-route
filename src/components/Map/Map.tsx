@@ -16,7 +16,6 @@ export default function Map() {
     getCurrentLocation,
     followUser,
     currentLocation,
-    route,
     routeLines,
     startRecording,
   } = useLocation()
@@ -72,13 +71,11 @@ export default function Map() {
           latitudeDelta: 0.00922, // ~0.01km
           longitudeDelta: 0.00421, // ~0.005km
         }}>
-        {route.current && (
-          <Polyline
-            strokeColor="green"
-            strokeWidth={3}
-            coordinates={routeLines}
-          />
-        )}
+        <Polyline
+          strokeColor="green"
+          strokeWidth={3}
+          coordinates={routeLines}
+        />
       </MapView>
       <FloatButton
         iconName="locate-outline"
@@ -86,7 +83,7 @@ export default function Map() {
         style={styles.centerPositionButton}
       />
       <FloatButton
-        iconName={route.current ? 'pause-circle-outline' : 'videocam-outline'}
+        iconName={false ? 'pause-circle-outline' : 'videocam-outline'}
         onPress={startRecording}
         style={styles.recordButton}
       />

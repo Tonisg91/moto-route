@@ -1,7 +1,6 @@
 import {useEffect, useRef, useState} from 'react'
 import Geolocation, {GeoCoordinates} from 'react-native-geolocation-service'
 import {useAuth} from '../Auth/context'
-import Route, {RECORDING} from '../Routes/Route'
 import {usePermissions} from '../Settings/context'
 
 export default function useLocation() {
@@ -13,7 +12,6 @@ export default function useLocation() {
   const [currentLocation, setCurrentLocation] = useState<GeoCoordinates>()
   const [initialLocation, setInitialLocation] = useState<GeoCoordinates>()
 
-  const route = useRef<Route>()
   const watchId = useRef<number>()
   const isMounted = useRef(true)
 
@@ -53,10 +51,6 @@ export default function useLocation() {
       location => {
         // if (!isMounted.current) return
         setCurrentLocation(location.coords)
-
-        if (route.current && route.current.status === RECORDING) {
-          route.current.addPoint(location.coords)
-        }
         setRouteLines(routes => [...routes, location.coords])
       },
       error => console.log(error),
@@ -66,8 +60,6 @@ export default function useLocation() {
 
   const startRecording = () => {
     if (!user?.uid) return
-    route.current = new Route(user.uid)
-    console.log(route.current)
     followUser()
   }
 
@@ -75,9 +67,6 @@ export default function useLocation() {
     if (watchId.current) {
       Geolocation.clearWatch(watchId.current)
     }
-
-    // pause route
-    route.current?.pauseRoute()
   }
 
   return {
@@ -87,7 +76,6 @@ export default function useLocation() {
     getCurrentLocation,
     followUser,
     stopFollowing,
-    route,
     routeLines,
     startRecording,
   }
